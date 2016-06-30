@@ -541,7 +541,7 @@ git commit -m 'Traduzidas as URLs'
 
 [source,bash]
 ----
-git apply ../tutorial-metalsmith/patches/layouts/default.jade.3
+git apply tutorial-metalsmith/patches/layouts/default.jade.3
 ----
 
 [source,bash]
@@ -560,7 +560,7 @@ EOF
 
 [source,bash]
 ----
-git apply ../tutorial-metalsmith/patches/content/index_en.md.2
+git apply tutorial-metalsmith/patches/content/index_en.md.2
 ----
 
 [source,bash]
