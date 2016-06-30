@@ -14,6 +14,8 @@
 * https://github.com/jelz/gulp-metalsmith
 * https://blog.dunckr.com/articles/gulp-metalsmith-blog/
 * http://www.brightdigit.com/blog/16/03/11/building-static-sites-middleman-and-metalsmith/
+* http://robinthrift.github.io/metalsmith-presentation-slides/#/
+* http://devo.ps/blog/metalsmith-on-github-pages/
 
 == Diversos
 
