@@ -1,0 +1,17 @@
+diff --git a/index.js b/index.js
+index eeb354b..6dac41a 100644
+--- a/index.js
++++ b/index.js
+@@ -1,10 +1,12 @@
+ var path = require('path');
+ 
+ var metalsmith = require('metalsmith');
++var markdown = require('metalsmith-markdown');
+ 
+ metalsmith(__dirname)
+     .source('content')
+     .destination('dist')
++    .use(markdown())
+     .build(function (err) {
+         if (err) { console.error(err); }
+     });

@@ -1,0 +1,23 @@
+diff --git a/index.js b/index.js
+index 4329487..45b14c7 100644
+--- a/index.js
++++ b/index.js
+@@ -4,10 +4,18 @@ var metalsmith = require('metalsmith');
+ var markdown = require('metalsmith-markdown');
+ var assets = require('metalsmith-assets');
+ var layouts = require('metalsmith-layouts');
++var multiLanguage = require('metalsmith-multi-language');
++
++const DEFAULT_LOCALE = 'en';
++const LOCALES = ['en', 'es'];
+ 
+ metalsmith(__dirname)
+     .source('content')
+     .destination('dist')
++    .use(multiLanguage({
++	default: DEFAULT_LOCALE,
++	locales: LOCALES
++    }))
+     .use(markdown())
+     .use(layouts({
+ 	engine: 'jade',

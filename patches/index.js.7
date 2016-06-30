@@ -1,0 +1,39 @@
+diff --git a/index.js b/index.js
+index 3629e22..439763f 100644
+--- a/index.js
++++ b/index.js
+@@ -7,6 +7,7 @@ var layouts = require('metalsmith-layouts');
+ var multiLanguage = require('metalsmith-multi-language');
+ var permalinks = require('metalsmith-permalinks');
+ var i18n = require('metalsmith-i18n');
++var collections = require('metalsmith-collections');
+ 
+ const DEFAULT_LOCALE = 'en';
+ const LOCALES = ['en', 'es'];
+@@ -14,6 +15,10 @@ const LOCALES = ['en', 'es'];
+ metalsmith(__dirname)
+     .source('content')
+     .destination('dist')
++    .use(collections({
++	'recipes_en': 'recipes/*_en.md',
++	'recipes_es': 'recipes/*_es.md'
++    }))
+     .use(multiLanguage({
+ 	default: DEFAULT_LOCALE,
+ 	locales: LOCALES
+@@ -26,7 +31,14 @@ metalsmith(__dirname)
+     .use(markdown())
+     .use(permalinks({
+         relative: false,
+-        pattern: ':locale/:title/'
++        pattern: ':locale/:title/',
++	linksets: [{
++	    match: { collection: 'recipes_en' },
++	    pattern: ':locale/recipes/:title/'
++	}, {
++	    match: { collection: 'recipes_es' },
++	    pattern: ':locale/recetas/:title/'
++	}]
+     }))
+     .use(layouts({
+ 	engine: 'jade',

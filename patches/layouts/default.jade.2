@@ -1,0 +1,27 @@
+diff --git a/layouts/default.jade b/layouts/default.jade
+index 6be143c..9e35e7c 100644
+--- a/layouts/default.jade
++++ b/layouts/default.jade
+@@ -1,17 +1,18 @@
+ doctype html
+ head
+-    title Cookbook - #{title}
++    title #{__('Cookbook')} - #{title}
+     meta(charset='utf-8')
+     link(rel='stylesheet', href='/css/styles.css')
+ body
+     header
+-        h1 Cookbook
++        - var url = locale === defaultLocale ? '/' : `/${locale}/`;
++        h1: a(href=url)= __('Cookbook')
+     main: article
+         - var availableLocales = locales.filter(x => x !== locale && !!lang(x));
+         if availableLocales
+-        p Also available in#{' '}
++        p #{__('Also available in') + ' '}
+             each lc, index in availableLocales
+-                a(href=`/${lang(lc).path}`)= lc
++                a(href=`/${lang(lc).path}`)= __(lc)
+                 if index < availableLocales.length - 1
+                     |,#{' '}
+             |.

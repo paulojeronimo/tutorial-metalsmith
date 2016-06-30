@@ -1,0 +1,589 @@
+= Tutorial de Metalsmith
+Paulo Jerônimo <paulojeronimo@gmail.com>
+{localdatetime}
+:toc:
+:toc-title: Conteúdo
+:numbered:
+:icons: font
+:experimental:
+
+:uri-metalsmith: http://www.metalsmith.io/
+:uri-staticsitegenerators: https://staticsitegenerators.net/
+:uri-nodejs: https://nodejs.org/
+:uri-git: https://git-scm.com/
+:uri-vim: http://www.vim.org/
+:uri-markdown: https://daringfireball.net/projects/markdown/
+:uri-jade: http://jade-lang.com/
+
+Este tutorial *[red]#(AINDA INCOMPLETO, EM DRAFT)#* apresenta como criar um site estático, em JavaScript, utilizando o {uri-metalsmith}[Metalsmith], um dos {uri-staticsitegenerators}[vários geradores de sites estáticos] existentes no mercado.
+
+Os seguintes assuntos são explorados:
+
+. Organização de uma estrutura de diretórios para o projeto;
+. Utilização do {uri-nodejs}[NodeJS] e do Metalsmith;
+. Utilização do {uri-git}[Git] para o versionamento dos fontes;
+. Utilização do {uri-vim}[Vim] com _plugins_ provendo _features_ para _syntax highlighting_ e _code completion_ para linguagens como JavaScript, JSON, {uri-jade}[Jade] e {uri-markdown}[Markdown], dentre outras;
+. Escrita de páginas utilizando a linguagem {uri-markdown}[Markdown];
+. Escrita de templates utilizando a linguagem {uri-jade}[Jade];
+. Criação de sites apresentando conteúdos em diferentes línguas;
+
+Nesta versão, este tutorial expande, adapta e executa, passo a passo, numa VM Linux, os comandos apresentados, de forma bastante prática prática e assertiva, nestes dois outro tutoriais:
+
+. http://www.belenalbeza.com/building-a-static-multi-language-site-with-metalsmith-part-i/[Building a static multi-language site with Metalsmith (part I)]
+. http://www.belenalbeza.com/building-a-static-multi-language-site-with-metalsmith-part-ii/[Building a static multi-language site with Metalsmith (part II)]
+
+Para que você possa se aprofundar ainda mais nos assuntos cobertos aqui, é recomendada a leitura desses materiais. Você pode fazer isso antes ou depois de seguir este tutorial, fica a teu critério.
+
+<<<
+== Criando o projeto
+
+Inicie o projeto com os seguintes comandos:
+
+[source,bash]
+----
+mkdir metalsmith-test && cd $_
+date > TIMESTAMP
+npm init
+----
+
+Abaixo são apresentadas as respostas que dou para os questionamentos feitos pelo comando acima.
+
+NOTE: Em tuas respostas, utilize o teu nome para o campo `author` e deixe as outras respostas iguais.
+
+----
+This utility will walk you through creating a package.json file.
+It only covers the most common items, and tries to guess sensible defaults.
+
+See `npm help json` for definitive documentation on these fields
+and exactly what they do.
+
+Use `npm install <pkg> --save` afterwards to install a package and
+save it as a dependency in the package.json file.
+
+Press ^C at any time to quit.
+name: (metalsmith-test) 
+version: (1.0.0) 
+description: Metalsmith test
+entry point: (index.js) 
+test command: 
+git repository: .
+keywords: metalsmith javascript
+author: Paulo Jerônimo
+license: (ISC) 
+----
+
+Verifique se o conteúdo do teu arquivo `package.json` é semelhante a link:package.json[este].
+
+Faça o teu primeiro _git commit_:
+
+[source,bash]
+----
+git init
+git add .
+git commit -m 'Criado o projeto'
+----
+
+[NOTE]
+====
+Você receberá um erro na execução do comando `git commit` se ainda não ainda não tiver configurado teu nome e email no `git`. Isso ocorrerá, por exemplo, caso você esteja utilizando a `fedora-nodejs-box` pela primeira vez. Para corrigir esse problema, e poder reexecutar o comando, execute os comandos a seguir: _(obviamente, informe teus dados como valores para `user.name` e `user.email`)_
+
+[source,bash]
+----
+git config --global user.name "Paulo Jerônimo"
+git config --global user.email "paulojeronimo@gmail.com"
+----
+====
+
+<<<
+== Adicionando o Metalsmith
+
+Adicione o metalsmith ao `package.json` e crie um novo arquivo HTML com os comandos abaixo:
+
+[source,bash]
+----
+npm install --save metalsmith
+mkdir content && touch content/index.html
+----
+
+Observe as mudanças no repositório (`git status`).
+
+Crie o arquivo `index.js` com o comando abaixo:
+
+[source,bash]
+----
+cat > index.js <<'EOF'
+var path = require('path');
+
+var metalsmith = require('metalsmith');
+
+metalsmith(__dirname)  
+    .source('content')
+    .destination('dist')
+    .build(function (err) {
+        if (err) { console.error(err); }
+    });
+EOF
+----
+
+Observe as mudanças na estrutura de diretórios do repositório:
+
+[source,bash]
+----
+tree -L 1
+node index.js
+find dist/
+git status
+----
+
+Crie o arquivo `.gitignore` com o comando abaixo:
+
+[source,bash]
+----
+cat > .gitignore <<'EOF'
+dist
+node_modules
+EOF
+----
+
+Faça o teu segundo commit:
+
+[source,bash]
+----
+git status
+git add .
+git commit -m 'Adicionado o uso do Metalsmith'
+----
+
+Verifique o log do repositório:
+
+[source,bash]
+----
+git log --name-status
+----
+
+<<<
+== Fazendo o uso de arquivos Markdown
+
+Renomeie e o arquivo `index.html` para `index.md` e altere o seu conteúdo com os seguintes comandos:
+
+[source,bash]
+----
+git mv content/index.html content/index.md
+cat > content/index.md <<'EOF'
+---
+title: Home
+---
+
+My collection of **recipes**.
+EOF
+----
+
+Adicione o pacote `metalsmith-markdown`:
+
+[source,bash]
+----
+npm install --save metalsmith-markdown
+----
+
+Clone o código desse tutorial e adicione seu diretório ao `.gitignore`. Estamos fazendo isso para poder utilizar alguns arquivos de seu repositório.
+
+[source,bash]
+----
+git clone https://github.com/paulojeronimo/tutorial-metalsmith
+echo tutorial-metalsmith >> .gitignore
+----
+
+O conteúdo apresenta, http://www.gnu.org/software/diffutils/manual/html_node/Detailed-Unified.html#Detailed-Unified[no formato diff], as mudanças que você precisará fazer no `index.js`: 
+
+NOTE: as linhas com um "+" na frente representam adições realizadas.
+
+[source,diff]
+----
+include::patches/index.js.1[]
+----
+
+Você pode fazer essas alterações "na mão", alterando o arquivo, se quiser. Ou, você pode simplificar tua vida e executar o seguinte comando:
+
+[source,bash]
+----
+git apply tutorial-metalsmith/patches/index.js.1
+----
+
+Você observará as mudanças através do comando `git difftool`. Antes, porém, faça as seguintes configurações:
+
+[source,bash]
+----
+git config --global diff.tool vimdiff
+git config --global --add difftool.prompt false
+----
+
+Agora, veja as diferenças:
+
+[source,bash]
+----
+git difftool
+----
+
+Execute o comando abaixo e veja o arquivo (`index.html`) que será gerado a partir do `index.md`:
+
+[source,bash]
+----
+node index.js
+cat dist/index.html
+----
+
+Faça o teu terceiro _git commit_:
+
+[source,bash]
+----
+git status
+git add .
+git commit -m 'Feito o uso de arquivos Markdown'
+----
+
+<<<
+== Disponibilizando arquivos estáticos (imagens, CSS, etc)
+
+Adicione o uso do pacote `metalsmith-assets`:
+
+[source,bash]
+----
+npm install --save metalsmith-assets
+----
+
+Crie o diretório `assets/css` e o arquivo `styles.css` dentro dele. Em seguida veja a estrutura montada.
+
+[source,bash]
+----
+mkdir -p assets/css && touch $_/styles.css
+tree assets/
+----
+
+Para fazer uso de assets, mudanças precisarão ser realizadas no `index.js`, conforme o conteúdo abaixo:
+
+[source,diff]
+----
+include::patches/index.js.2[]
+----
+
+Altere o `index.js` executando o comando a seguir:
+
+[source,bash]
+----
+git apply tutorial-metalsmith/patches/index.js.2
+----
+
+Verifique a mudança, rode novamente o `index.js`, e veja a estrutura construída:
+
+[source,bash]
+----
+cat index.js
+node $_
+tree dist/
+----
+
+Faça o teu quarto _git commit_:
+
+[source,bash]
+----
+git status
+git add .
+git commit -m 'Disponibilizado arquivos estáticos'
+----
+
+<<<
+== Desenvolvendo o uso de layouts
+
+[source,bash]
+----
+npm install --save jade metalsmith-layouts
+----
+
+[source,bash]
+----
+mkdir -p layouts && cat > layouts/default.jade <<EOF
+doctype html
+head
+    title Cookbook - #{title}
+    meta(charset='utf-8')
+    link(rel='stylesheet', href='/css/styles.css')
+body
+    header
+        h1 Cookbook
+    main: article
+        h1= title
+        != contents
+EOF
+----
+
+[source,bash]
+----
+cat tutorial-metalsmith/patches/index.js.3
+git apply !$
+----
+
+[source,bash]
+----
+node index.js
+cat dist/index.html
+----
+
+[source,bash]
+----
+git status
+git add .
+git commit -m 'Desenvolvido o uso de layouts'
+----
+
+<<<
+== Suportando o uso de múltiplas línguas
+
+[source,bash]
+----
+git mv content/index.md content/index_en.md
+----
+
+[source,bash]
+----
+cat > content/index_es.md <<'EOF'
+---
+title: Inicio
+---
+
+Mi colección de **recetas**.
+EOF
+----
+
+[source,bash]
+----
+npm install --save metalsmith-multi-language
+----
+
+[source,bash]
+----
+git apply tutorial-metalsmith/patches/index.js.4
+cat index.js
+node $_
+tree dist/
+----
+
+[source,bash]
+----
+git status
+git add .
+git commit -m 'Suportado o uso de múltiplas línguas 1/2'
+----
+
+[source,bash]
+----
+git apply tutorial-metalsmith/patches/layouts/default.jade.1
+cat layouts/default.jade 
+----
+
+[source,bash]
+----
+node index.js
+npm install -g http-server
+(cd dist/; http-server -p 4000)
+----
+
+Abra a URL http://localhost:4000 e teste a aplicação.
+Ao terminar teu teste, pressione um kbd:[Ctrl+C] para encerrar o servidor e continuar os próximos comandos.
+
+[source,bash]
+----
+git status
+git commit -am 'Suportado o uso de múltiplas línguas 2/2'
+----
+
+<<<
+== Inserindo a localização nas URLs
+
+[source,bash]
+----
+npm install --save metalsmith-permalinks
+----
+
+[source,bash]
+----
+mkdir content/recipes
+cat > content/recipes/tortilla_en.md <<'EOF'
+---
+title: Spanish omelette
+---
+
+Ingredients:
+
+- 2 potatoes
+- 3 eggs
+- 1 onion
+- Olive oil
+- Salt
+EOF
+cat > content/recipes/tortilla_es.md <<'EOF'
+---
+title: Tortilla de patatas
+---
+
+Ingredientes:
+
+- 2 patatas
+- 3 huevos
+- 1 cebolla
+- Aceite de oliva
+- Sal
+EOF
+----
+
+[source,bash]
+----
+git apply tutorial-metalsmith/patches/index.js.5
+git apply tutorial-metalsmith/patches/content/index_en.md.1
+----
+
+[source,bash]
+----
+node index.js
+(cd dist/; http-server -p 4000)
+----
+
+Abra a URL http://localhost:4000/en/spanish-omelette/ e teste a aplicação.
+Ao terminar teu teste, pressione um kbd:[Ctrl+C] para encerrar o servidor e continuar os próximos comandos.
+
+[source,bash]
+----
+git status
+git add .
+git commit -m 'Inserida a localização nas URLs'
+----
+
+<<<
+== Traduzindo o layout
+
+[source,bash]
+----
+npm install --save metalsmith-i18n
+----
+
+[source,bash]
+----
+mkdir -p locales
+cat > locales/en.json <<'EOF'
+{
+    "Cookbook": "Cookbook",
+    "Also available in": "Also available in",
+    "es": "castellano"
+}
+EOF
+cat > locales/es.json <<'EOF'
+{
+    "Cookbook": "Recetario",
+    "Also available in": "Disponible también en",
+    "en": "English"
+}
+EOF
+----
+
+[source,bash]
+----
+git apply tutorial-metalsmith/patches/index.js.6
+git apply tutorial-metalsmith/patches/layouts/default.jade.2
+----
+
+[source,bash]
+----
+node index.js
+(cd dist/; http-server -p 4000)
+----
+
+Abra a URL http://localhost:4000/en/spanish-omelette/ e teste a aplicação.
+Ao terminar teu teste, pressione um kbd:[Ctrl+C] para encerrar o servidor e continuar os próximos comandos.
+
+[source,bash]
+----
+git status
+git add .
+git commit -m 'Traduzido o layout'
+----
+
+<<<
+== Traduzindo as URLs
+
+[source,bash]
+----
+npm install --save metalsmith-collections
+----
+
+[source,bash]
+----
+git apply tutorial-metalsmith/patches/index.js.7
+----
+
+[source,bash]
+----
+node index.js
+tree dist/
+(cd dist/; http-server -p 4000)
+----
+
+Abra a URL http://localhost:4000/en/recipes/spanish-omelette/ e teste a aplicação.
+Ao terminar teu teste, pressione um kbd:[Ctrl+C] para encerrar o servidor e continuar os próximos comandos.
+
+[source,bash]
+----
+git status
+git add .
+git commit -m 'Traduzidas as URLs'
+----
+
+<<<
+== Gerando um índice localizado
+
+[source,bash]
+----
+git apply ../tutorial-metalsmith/patches/layouts/default.jade.3
+----
+
+[source,bash]
+----
+cat > layouts/home.jade <<'EOF'
+extends ./default.jade
+
+block extra
+    h2= __('Recipes')
+
+    ul
+        each recipe in collections[`recipes_${locale}`]
+            li: a(href=`/${recipe.path}`)= recipe.title
+EOF
+----
+
+[source,bash]
+----
+git apply ../tutorial-metalsmith/patches/content/index_en.md.2
+----
+
+[source,bash]
+----
+node index.js
+git status
+sed -i 's/\(: "\)Recipes/\1Recetas/g' locales/es.json
+cat $_
+----
+
+[source,bash]
+----
+git status
+git add .
+git commit -m 'Gerado um índice localizado'
+----
+
+<<<
+== Apresentando uma história de sucesso
+
+Parabéns! Você concluiu um bom trabalho! Execute o comando git a seguir para ver toda a tua história de sucesso:
+
+[source,bash]
+----
+git log --pretty=format:'* %s %Cgreen(%cr)'
+----
