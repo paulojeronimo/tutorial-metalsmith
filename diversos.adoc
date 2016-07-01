@@ -1,21 +1,28 @@
 == Referências
 
-* http://www.metalsmith.io/
-* http://www.robinthrift.com/posts/metalsmith-part-1-setting-up-the-forge/
-* http://bourcereau.fr/en/blog/using-metalsmith-with-jade/
-* http://www.abm.io/implementing-a-metalsmith-plugin/
-* http://www.okaythree.com/2015/03/building-a-blog-with-metalsmith/
-* http://articles.jeffjewiss.com/quick-free-static-sites-with-metalsmith-and-divshot/
-* https://azurelogic.com/posts/building-a-blog-with-metalsmith/
-* https://segment.com/blog/building-technical-documentation-with-metalsmith/
-* http://blog.abodit.com/2016/05/moving-my-blog-to-metalsmith/
-* https://www.sitepoint.com/create-static-site-metalsmith/
-* http://evocode.com/blog/mastering-metalsmith-best-practices-for-static-sites/
-* https://github.com/jelz/gulp-metalsmith
-* https://blog.dunckr.com/articles/gulp-metalsmith-blog/
-* http://www.brightdigit.com/blog/16/03/11/building-static-sites-middleman-and-metalsmith/
-* http://robinthrift.github.io/metalsmith-presentation-slides/#/
-* http://devo.ps/blog/metalsmith-on-github-pages/
+* Metalsmith:
+** http://www.metalsmith.io/
+** http://www.robinthrift.com/posts/metalsmith-part-1-setting-up-the-forge/
+** http://bourcereau.fr/en/blog/using-metalsmith-with-jade/
+** http://www.abm.io/implementing-a-metalsmith-plugin/
+** http://www.okaythree.com/2015/03/building-a-blog-with-metalsmith/
+** http://articles.jeffjewiss.com/quick-free-static-sites-with-metalsmith-and-divshot/
+** https://azurelogic.com/posts/building-a-blog-with-metalsmith/
+** https://segment.com/blog/building-technical-documentation-with-metalsmith/
+** http://blog.abodit.com/2016/05/moving-my-blog-to-metalsmith/
+** https://www.sitepoint.com/create-static-site-metalsmith/
+** http://evocode.com/blog/mastering-metalsmith-best-practices-for-static-sites/
+* Metalsmith + Gulp:
+** https://github.com/jelz/gulp-metalsmith
+** https://blog.dunckr.com/articles/gulp-metalsmith-blog/
+* Metalsmith Presentations:
+** http://robinthrift.github.io/metalsmith-presentation-slides/#/
+* Metalsmith + GitHub Pages:
+** http://www.brightdigit.com/blog/16/03/11/building-static-sites-middleman-and-metalsmith/
+** http://devo.ps/blog/metalsmith-on-github-pages/
+* Metalsmith + Asciidoctor:
+** https://www.npmjs.com/package/metalsmith-asciidoc
+** http://joelkleier.com/blog/2014-10-asciidoc-plus-metalsmith/
 
 == Diversos
 
