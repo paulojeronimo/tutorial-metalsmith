@@ -42,6 +42,11 @@ Inicie o projeto com os seguintes comandos:
 [source,bash]
 ----
 mkdir metalsmith-test && cd $_
+cat > README.md <<'EOF'
+# Metalsmith Test
+
+Aplicação desenvolvida seguindo o [tutorial-metalsmith](https://paulojeronimo.github.io/tutorial-metalsmith/) criado pelo [Paulo Jerônimo](https://github.com/paulojeronimo).
+EOF
 date > TIMESTAMP
 npm init
 ----
